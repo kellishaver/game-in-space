@@ -4,8 +4,11 @@ def maybe_spawn_alien(ship_x, ship_y)
   if @aliens.length < MAX_ALIENS
     x = spawn_x
     y = spawn_y
-    @aliens << Image.new(
+    alien = Sprite.new(
       "assets/alien.png",
+      clip_width: 30,
+      time: 200,
+      loop: true,
       x: x,
       y: y,
       z: 9,
@@ -13,6 +16,8 @@ def maybe_spawn_alien(ship_x, ship_y)
       height: 30,
       rotate: set_facing(x,y,ship_x,ship_y)
     )
+    alien.play
+    @aliens << alien
   end
 end
 
