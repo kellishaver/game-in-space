@@ -8,7 +8,7 @@ def maybe_spawn_alien(ship_x, ship_y)
       "assets/alien.png",
       clip_width: 30,
       time: 200,
-      loop: true,
+      loop: false,
       x: x,
       y: y,
       z: 9,

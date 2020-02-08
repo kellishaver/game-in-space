@@ -31,3 +31,16 @@ def clean_up_old_lasers(obj)
     obj[:pew].remove
   end
 end
+
+def handle_hits(laser)
+  @aliens.each do |alien|
+    if alien.contains? laser[:pew].x, laser[:pew].y
+      @boom.play
+      @score += 5 * @lasers.length + @aliens.length
+      @lasers.delete(laser)
+      laser[:pew].remove
+      @aliens.delete(alien)
+      alien.remove
+    end
+  end
+end

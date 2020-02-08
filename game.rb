@@ -17,8 +17,12 @@ set(
 @lasers = []
 @aliens = []
 
+@score = 0
+@lives = 3
+
 # SFX & Music
 @pew = Sound.new('assets/pew.wav')
+@boom = Sound.new('assets/boom.wav')
 
 bg_music = Music.new('assets/music.mp3')
 bg_music.volume = 30
@@ -42,10 +46,32 @@ star_field = Image.new(
   width: 2400, height: 1800
 )
 
+scoreboard = Text.new(
+  @score,
+  x: 100, y: 10,
+  size: 16,
+  color: '#ffffff',
+  z: 100
+)
+
+lifecard = Text.new(
+  @lives,
+  x: 40, y: 10,
+  size: 16,
+  color: '#ffffff',
+  z: 100
+)
+
 rocket = Image.new(
   "assets/rocket.png",
   x: 375, y: 277, z: 10,
   width: 50, height: 50
+)
+
+life_marker = Image.new(
+  "assets/rocket.png",
+  x: 10, y: 10, z: 10,
+  width: 20, height: 16
 )
 
 # Rotation and movement for our rocket
@@ -81,7 +107,7 @@ update do
   @lasers.each do |laser|
     move_toward_facing(laser[:pew], laser[:direction], SPEED*3)
     clean_up_old_lasers(laser)
-    # TODO: blow stuff up
+    handle_hits(laser)
   end
 
   # Behaves a lot like lasers - itereate, clean, kill
@@ -95,6 +121,9 @@ update do
   # half of them.
   maybe_spawn_alien(rocket.x, rocket.y)   if tick % 60 == 0
   rotate_some_aliens                      if tick % 120 == 0
+
+  scoreboard.text = @score
+  lifecard.text = @lives
 
   tick += 1
 end
