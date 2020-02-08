@@ -35,8 +35,8 @@ MAX_LASERS = 3
 
 star_field = Image.new(
   "assets/bg.png",
-  x: 0, y: 0, z: 1,
-  width: 800, height: 600
+  x: -800, y: -600, z: 1,
+  width: 2400, height: 1800
 )
 
 rocket = Image.new(
@@ -57,6 +57,7 @@ on :key_held do |event|
     rocket.rotate -= SPEED
   when "i"
     move_toward_facing(rocket, rocket.rotate, SPEED)
+    move_background(star_field, rocket.rotate, SPEED/2)
     screen_glide(rocket)
   end
 end

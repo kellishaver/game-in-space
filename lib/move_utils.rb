@@ -28,3 +28,25 @@ def move_toward_facing(obj, angle, speed)
   obj.x += Math.cos(angle) * speed
   obj.y += Math.sin(angle) * speed
 end
+
+# Scroll the background opposite the ship's angle. This gets a
+# little jumpy when  you get to the edge of the background, but
+# I don't suspect that will happen often during gameplay.
+#
+# The proper approach would be to create additional instances of
+# the background and tile them, removing ones that get out of
+# frame. 
+def move_background(obj, angle, speed)
+  if obj.x > obj.width/3 * -2 &&
+     obj.x < 0 &&
+     obj.y > obj.height/3 * -2 &&
+     obj.y < 0
+
+    angle = (angle - 90) * Math::PI / 180 # convert rad to deg
+    obj.x -= Math.cos(angle) * speed
+    obj.y -= Math.sin(angle) * speed
+  else
+    obj.x = -800
+    obj.y = -600
+  end
+end
