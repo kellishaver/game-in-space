@@ -1,6 +1,7 @@
 require 'ruby2d'
 require './lib/move_utils.rb'
-require './lib/combat_utils.rb'
+require './lib/alien_utils.rb'
+require './lib/laser_utils.rb'
 
 set(
   title: "GAME IN SPAAAACE!",
@@ -10,10 +11,11 @@ set(
   borderless: true
 )
 
-# Contains all lasers fired by the ship, so we can
+# Arrays to contain various objects, so we can
 # keep them updated, removed as-needed, and prevent
-# too many from being fired at once.
+# too many from being on screen at once.
 @lasers = []
+@aliens = []
 
 # SFX & Music
 @pew = Sound.new('assets/pew.wav')
@@ -26,10 +28,11 @@ bg_music.play
 # Arbitrary speed that feels right for gameplay
 SPEED = 5
 
-# The maximum number of lasers from our rocket that
-# we can have on-screen at once (mostly to prevent UI clutter,
+# The maximum numbers of various objects that we can
+# have on-screen at once (mostly to prevent UI clutter,
 # partially for performance)
 MAX_LASERS = 3
+MAX_ALIENS = 10
 
 # Render our main objects present at the start of the game
 
@@ -69,6 +72,8 @@ on :key_up do |event|
   end
 end
 
+tick = 0
+
 # The game loop
 update do
   # Iterate over all of our lasers and do laser-y things
@@ -78,6 +83,20 @@ update do
     clean_up_old_lasers(laser)
     # TODO: blow stuff up
   end
+
+  # Behaves a lot like lasers - itereate, clean, kill
+  @aliens.each do |alien|
+    move_toward_facing(alien, alien.rotate, SPEED/2)
+    clean_up_old_aliens(alien)
+    # TODO: kill the ship
+  end
+
+  # spawn aliens if there's room for them on the screen and rotate
+  # half of them.
+  maybe_spawn_alien(rocket.x, rocket.y)   if tick % 60 == 0
+  rotate_some_aliens                      if tick % 120 == 0
+
+  tick += 1
 end
 
 show

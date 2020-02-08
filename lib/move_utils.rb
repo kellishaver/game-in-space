@@ -42,11 +42,18 @@ def move_background(obj, angle, speed)
      obj.y > obj.height/3 * -2 &&
      obj.y < 0
 
-    angle = (angle - 90) * Math::PI / 180 # convert rad to deg
+    angle = (angle - 90) * Math::PI / 180
     obj.x -= Math.cos(angle) * speed
     obj.y -= Math.sin(angle) * speed
   else
     obj.x = -800
     obj.y = -600
   end
+end
+
+# Point inward toward a specified point
+def set_facing(x,y,at_x,at_y)
+  facing_rad = Math.atan2((at_y - y), (at_x - x))
+  angle = (facing_rad + 90) / Math::PI * 180
+  return angle
 end
