@@ -32,15 +32,26 @@ def clean_up_old_lasers(obj)
   end
 end
 
+# Check ot see if our laser hit anything and then do a lot of
+# stuff if it ihas.
+#
+# 1. Play the 'boom' sound
+# 2. Increase the score
+# 3. Remove the laser and the alien
+# 4. Reward an extra life if the score is high enough
 def handle_hits(laser)
   @aliens.each do |alien|
     if alien.contains? laser[:pew].x, laser[:pew].y
       @boom.play
-      @score += 5 * @lasers.length + @aliens.length
+      @score += 10
+
       @lasers.delete(laser)
       laser[:pew].remove
+
       @aliens.delete(alien)
       alien.remove
+
+      @lives += 1 if @score % 100 == 0
     end
   end
 end

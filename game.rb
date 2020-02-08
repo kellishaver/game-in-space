@@ -74,6 +74,14 @@ life_marker = Image.new(
   width: 20, height: 16
 )
 
+@overlay = Rectangle.new(
+  x: 0, y: 0,
+  width: 800, height: 600,
+  color: '#ff0000',
+  z: 99,
+  opacity:0
+)
+
 # Rotation and movement for our rocket
 #
 # Spin with j and l,
@@ -93,7 +101,7 @@ end
 
 # Space bar go 'Pew! Pew!'
 on :key_up do |event|
-  if event.key == "space"
+  if event.key == "space" && @score > 0
     maybe_fire_laser(rocket)
   end
 end
@@ -102,30 +110,39 @@ tick = 0
 
 # The game loop
 update do
-  # Iterate over all of our lasers and do laser-y things
-  # like move, vanish when out of range, and hit stuff 
-  @lasers.each do |laser|
-    move_toward_facing(laser[:pew], laser[:direction], SPEED*3)
-    clean_up_old_lasers(laser)
-    handle_hits(laser)
+  if @lives >= 0
+    # Iterate over all of our lasers and do laser-y things
+    # like move, vanish when out of range, and hit stuff 
+    @lasers.each do |laser|
+      move_toward_facing(laser[:pew], laser[:direction], SPEED*3)
+      clean_up_old_lasers(laser)
+      handle_hits(laser)
+    end
+
+    # Behaves a lot like lasers - itereate, clean, kill
+    @aliens.each do |alien|
+      move_toward_facing(alien, alien.rotate, SPEED/2)
+      clean_up_old_aliens(alien)
+      handle_ship_collision(alien, rocket)
+    end
+
+    # spawn aliens if there's room for them on the screen and rotate
+    # half of them.
+    maybe_spawn_alien(rocket.x, rocket.y)   if tick % 60 == 0
+    rotate_some_aliens                      if tick % 120 == 0
+
+    @overlay.opacity = 0  if @overlay.opacity > 0 && tick % 60 == 0
+
+    # Update game states
+    scoreboard.text = @score
+    lifecard.text = @lives
+
+    tick += 1
+  else
+    lifecard.remove
+    @aliens.map{|a| a.remove}
+    @lasers.map{|l| l[:pew].remove}
   end
-
-  # Behaves a lot like lasers - itereate, clean, kill
-  @aliens.each do |alien|
-    move_toward_facing(alien, alien.rotate, SPEED/2)
-    clean_up_old_aliens(alien)
-    # TODO: kill the ship
-  end
-
-  # spawn aliens if there's room for them on the screen and rotate
-  # half of them.
-  maybe_spawn_alien(rocket.x, rocket.y)   if tick % 60 == 0
-  rotate_some_aliens                      if tick % 120 == 0
-
-  scoreboard.text = @score
-  lifecard.text = @lives
-
-  tick += 1
 end
 
 show

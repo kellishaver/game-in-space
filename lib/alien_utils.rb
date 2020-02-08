@@ -54,3 +54,20 @@ def clean_up_old_aliens(obj)
     obj.remove
   end
 end
+
+# See if we hit the ship and then:
+#
+# 1. Remove the alien
+# 2. Reduce lives by 1
+# 3. Flash the screen red.
+def handle_ship_collision(alien, ship)
+  if ship.contains? alien.x, alien.y
+    @boom.play
+    @lives -= 1
+
+    @aliens.delete(alien)
+    alien.remove
+
+    @overlay.opacity = 0.5
+  end
+end
