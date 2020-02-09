@@ -101,7 +101,7 @@ end
 
 # Space bar go 'Pew! Pew!'
 on :key_up do |event|
-  if event.key == "space" && @score > 0
+  if event.key == "space" && @lives > 0
     maybe_fire_laser(rocket)
   end
 end
