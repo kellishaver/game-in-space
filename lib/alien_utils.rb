@@ -62,7 +62,7 @@ end
 # 3. Flash the screen red.
 def handle_ship_collision(alien, ship)
   if ship.contains? alien.x, alien.y
-    @boom.play
+    @alarm.play
     @lives -= 1
 
     @aliens.delete(alien)

@@ -23,6 +23,7 @@ set(
 # SFX & Music
 @pew = Sound.new('assets/pew.wav')
 @boom = Sound.new('assets/boom.wav')
+@alarm = Sound.new('assets/hit.wav')
 
 bg_music = Music.new('assets/music.mp3')
 bg_music.volume = 30
@@ -131,7 +132,7 @@ update do
     maybe_spawn_alien(rocket.x, rocket.y)   if tick % 60 == 0
     rotate_some_aliens                      if tick % 120 == 0
 
-    @overlay.opacity = 0  if @overlay.opacity > 0 && tick % 60 == 0
+    @overlay.opacity = 0 if @overlay.opacity > 0 && tick % 60 == 0
 
     # Update game states
     scoreboard.text = @score
